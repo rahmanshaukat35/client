@@ -14,32 +14,38 @@ const TodoApp = () => {
 	const handleChange = (e) => {
 		setState((s) => ({ ...s, [e.target.name]: e.target.value }));
 	};
+
 	const handleSubmit = (e) => {
 		e.preventDefault();
+		let { title, location, description } = state;
+		title = title.trim();
+		location = location.trim();
+		description = description.trim();
+		if (title.length < 3) {
+			return window.notify('Title length should be at least 3 chars', 'error');
+		}
+		if (location.length < 3) {
+			return window.notify('Please enter location', 'error');
+		}
+		if (description.length < 10) {
+			return window.notify('Please enter description', 'error');
+		}
+		let todo = {
+			title,
+			location,
+			description,
+			// status: 'active',
+			// dateCreated: new Date().getTime(),
+		};
 
 		axios
-			.post(`${URL}/addTodo`, state)
+			.post(`${URL}/createTodo`, todo)
 			.then((res) => {
 				console.log(res);
 			})
 			.catch((err) => {
 				console.log(err);
 			});
-
-		// let { title, location, description } = state;
-		// title = title.trim();
-		// location = location.trim();
-		// description = description.trim();
-		// if (title.length < 3) {
-		// 	return window.notify('Title length should be at least 3 chars', 'error');
-		// }
-		// if (location.length < 3) {
-		// 	return window.notify('Please enter location', 'error');
-		// }
-		// if (description.length < 10) {
-		// 	return window.notify('Please enter description', 'error');
-		// }
-		// let formData = { title, location, description };
 	};
 	return (
 		<div className='py-5 home d-flex justify-content-center align-items-center'>
